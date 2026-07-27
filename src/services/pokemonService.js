@@ -41,7 +41,7 @@ function fileToBase64(file) {
 
 export const addPokemon = async (pokemonData) => {
     let pictureBase64 = "";
-    if (pokemonData.pictuure) {
+    if (pokemonData.picture) {
         pictureBase64 = await fileToBase64(pokemonData.picture);
     }
     const payload = {...pokemonData, picture: pictureBase64 };
