@@ -3,24 +3,33 @@ import { login } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './LoginPage.css';
+import Spinner from '../components/Spinner';
 
 export default function LoginPage() {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const handleSubmit =async (e) => {
         e.preventDefault();
+        setLoading(true);
         login(username, password).then((response) => {
             localStorage.setItem("token", response.access_token);
             navigate('/');
         }).catch((error) => {
             console.error("Error en login:", error);
             setError("Error al iniciar sesión. Por favor verfica tus credenciales.");
+        }).finally(() => {
+            setLoading(false);
         });
     };
+
+    if (loading) {
+        return <Spinner />;
+    }
     
     return (
         <Box component="form" className="login-form" onSubmit={handleSubmit}> 

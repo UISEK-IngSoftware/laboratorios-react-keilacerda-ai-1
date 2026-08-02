@@ -1,21 +1,30 @@
 import { useState, useEffect} from "react";
+import { getPokemonList } from "../services/pokemonService";
 import { Grid, Typography } from "@mui/material";
 import PokemonCard from "../components/PokemonCard";
+import Spinner from "../components/Spinner";
 import "./PokemonList.css";
-import { getPokemonList } from "../services/pokemonService";
 
 export default function PokemonList() {
     const [pokemons, setPokemons] = useState([]);
     const [errorMsg, setErrorMsg] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useEffect( () => {
+        setLoading(true);
         getPokemonList().then((pokemonsData) => {
             setPokemons(pokemonsData);
         }).catch((error) => {
             setErrorMsg("Error obteniendo la lista de Pokémons.");
             alert("Error obteniendo la lista de Pokémons:", error);
-        })
+        }).finally(() => {
+            setLoading(false);
+        });
     }, []);
+
+    if (loading) {
+        return <Spinner />;
+    }
 
     return (
         <Grid container spacing={2}>
